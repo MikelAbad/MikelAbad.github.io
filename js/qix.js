@@ -24,6 +24,10 @@ function restart() {
     location.reload();
 }
 
+function mute() {
+    game.bga.pause();
+}
+
 /* inputStates llevará el estado de las teclas left, right, down, up y space */
 inputStates = {};
 
@@ -102,7 +106,7 @@ game = {
         document.addEventListener("keyup", Key.onKeyup);
         game.bga = new Audio("sounds/tetris_theme.ogg");
         game.bga.loop = true;
-        game.bga.volume = .20;
+        game.bga.volume = .05;
         game.bga.load();
         game.bga.play();
         this.mainLoop();
@@ -131,7 +135,7 @@ game = {
 
             if (game.won) {
                 let gameWonAudio = new Audio("sounds/ffvii_victory.ogg");
-                gameWonAudio.volume = .5;
+                gameWonAudio.volume = .20;
                 gameWonAudio.play();
 
                 Grid.ctx.font = "150px Georgia";
@@ -144,7 +148,7 @@ game = {
             } else {
 
                 let gameOverAudio = new Audio("sounds/mario_dead.wav");
-                gameOverAudio.volume = .5;
+                gameOverAudio.volume = .20;
                 gameOverAudio.play();
 
                 Grid.ctx.font = "150px Georgia";
