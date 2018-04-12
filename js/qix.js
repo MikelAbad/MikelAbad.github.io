@@ -24,8 +24,17 @@ function restart() {
     location.reload();
 }
 
-function mute() {
-    game.bga.pause();
+function setVolume(vol) {
+    game.bga.volume = vol / 100;
+}
+
+function pause() {
+     if (game.paused) {
+         game.paused = false;
+         game.mainLoop();
+     } else {
+         game.paused = true;
+     }
 }
 
 /* inputStates llevará el estado de las teclas left, right, down, up y space */
@@ -86,6 +95,7 @@ game = {
 
     ended: false,
     won: false,
+    paused: false,
     // then: Date.now(),
     //
     // // Medir los FPS
@@ -116,18 +126,20 @@ game = {
     mainLoop: function () {
 
         if (!game.ended) {
-            Grid.paint();
-            Player.update();
-            Player.paint();
-            Grid.sparx.forEach(function (sparx) {
-                sparx.update();
-                sparx.paint();
-            });
-            Qix.update();
-            Qix.draw();
-            // game.measureFPS();
-            Grid.displayScore();
-            requestAnimationFrame(game.mainLoop);
+            if (!game.paused) {
+                Grid.paint();
+                Player.update();
+                Player.paint();
+                Grid.sparx.forEach(function (sparx) {
+                    sparx.update();
+                    sparx.paint();
+                });
+                Qix.update();
+                Qix.draw();
+                // game.measureFPS();
+                Grid.displayScore();
+                requestAnimationFrame(game.mainLoop);
+            }
 
         } else {
 
@@ -141,9 +153,9 @@ game = {
                 Grid.ctx.font = "150px Georgia";
                 Grid.ctx.strokeStyle = 'white';
                 Grid.ctx.lineWidth = 8;
-                Grid.ctx.strokeText("Victory!", 140, 280);
+                Grid.ctx.strokeText("Victory!", 100, 280);
                 Grid.ctx.fillStyle = 'green';
-                Grid.ctx.fillText("Victory!", 140, 280);
+                Grid.ctx.fillText("Victory!", 100, 280);
 
             } else {
 
