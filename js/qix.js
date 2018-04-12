@@ -20,6 +20,10 @@ function HashMap(hash) {
     return map;
 }
 
+function restart() {
+    location.reload();
+}
+
 /* inputStates llevará el estado de las teclas left, right, down, up y space */
 inputStates = {};
 
@@ -77,25 +81,30 @@ Key = {
 game = {
 
     ended: false,
-    then: Date.now(),
-
-    // Medir los FPS
-    measureFPS: function () {
-        let now = Date.now();
-        this.frameCount++;
-        this.delta = (now - this.then);
-        if (this.delta > 1000) {
-            this.fps = this.frameCount;
-            this.frameCount = 0;
-            this.then = now;
-            Debug.log("FPS:" + game.fps, 1);
-        }
-    },
+    won: false,
+    // then: Date.now(),
+    //
+    // // Medir los FPS
+    // measureFPS: function () {
+    //     let now = Date.now();
+    //     this.frameCount++;
+    //     this.delta = (now - this.then);
+    //     if (this.delta > 1000) {
+    //         this.fps = this.frameCount;
+    //         this.frameCount = 0;
+    //         this.then = now;
+    //     }
+    // },
 
     // Gestion de eventos para las teclas pulsadas
     start: function () {
         document.addEventListener("keydown", Key.onKeydown);
         document.addEventListener("keyup", Key.onKeyup);
+        game.bga = new Audio("sounds/tetris_theme.ogg");
+        game.bga.loop = true;
+        game.bga.volume = .20;
+        game.bga.load();
+        game.bga.play();
         this.mainLoop();
     },
 
@@ -112,48 +121,45 @@ game = {
             });
             Qix.update();
             Qix.draw();
-            game.measureFPS();
-            Debug.draw();
+            // game.measureFPS();
             Grid.displayScore();
             requestAnimationFrame(game.mainLoop);
+
         } else {
-            Grid.ctx.font = "150px Georgia";
-            Grid.ctx.strokeStyle = 'white';
-            Grid.ctx.lineWidth = 8;
-            Grid.ctx.strokeText("Game", 140, 200);
-            Grid.ctx.strokeText("Over", 175, 350);
 
-            Grid.ctx.fillStyle = 'red';
+            game.bga.pause();
 
-            Grid.ctx.fillText("Game", 140, 200);
-            Grid.ctx.fillText("Over", 175, 350);
+            if (game.won) {
+                let gameWonAudio = new Audio("sounds/ffvii_victory.ogg");
+                gameWonAudio.volume = .5;
+                gameWonAudio.play();
+
+                Grid.ctx.font = "150px Georgia";
+                Grid.ctx.strokeStyle = 'white';
+                Grid.ctx.lineWidth = 8;
+                Grid.ctx.strokeText("Victory!", 140, 280);
+                Grid.ctx.fillStyle = 'green';
+                Grid.ctx.fillText("Victory!", 140, 280);
+
+            } else {
+
+                let gameOverAudio = new Audio("sounds/mario_dead.wav");
+                gameOverAudio.volume = .5;
+                gameOverAudio.play();
+
+                Grid.ctx.font = "150px Georgia";
+                Grid.ctx.strokeStyle = 'white';
+                Grid.ctx.lineWidth = 8;
+                Grid.ctx.strokeText("Game", 140, 200);
+                Grid.ctx.strokeText("Over", 175, 350);
+
+                Grid.ctx.fillStyle = 'red';
+
+                Grid.ctx.fillText("Game", 140, 200);
+                Grid.ctx.fillText("Over", 175, 350);
+            }
         }
     }
-};
-
-// Debug en pantalla
-let Debug = {};
-
-Debug.lines = [];
-
-Debug.init = function (documentId) {
-    this.canvasD = document.getElementById(documentId);
-    this.ctxD = this.canvasD.getContext("2d");
-};
-
-Debug.clear = function () {
-    this.ctxD.clearRect(0, 0, this.canvasD.width, this.canvasD.height);
-};
-
-Debug.draw = function () {
-    this.clear();
-    for (let i = 1; i < this.lines.length; i++) {
-        this.ctxD.fillText(this.lines[i], 10, (i * 10));
-    }
-};
-
-Debug.log = function (text, line) {
-    this.lines[line] = text;
 };
 
 Grid = {
@@ -382,6 +388,7 @@ Grid = {
                 return 0;
             }
         }
+
         return cell_f;
     },
 
@@ -465,7 +472,7 @@ Grid = {
         this.ctx.fillStyle = 'rgb(0,255,0)';
         this.ctx.clearRect(0, 0, this.canvas.width - 3, Grid.offset[1] - 3);
         this.ctx.font = "32px Georgia";
-        this.ctx.fillText("Score: " + Player.score, 120, 35);
+        this.ctx.fillText("Score: " + Player.score, 80, 35);
         this.ctx.fillText("Area: " + Grid.percent.toFixed(2) + " / 75%", 350, 35);
     },
 };
@@ -850,8 +857,6 @@ class Sparx {
         }
 
         this.position = [x, y];
-        Debug.log("Sparx n0: " + Grid.sparx[0].position[0] + ", " + Grid.sparx[0].position[1], 4);
-        Debug.log("Sparx n1: " + Grid.sparx[1].position[0] + ", " + Grid.sparx[1].position[1], 5);
         Grid.dirty_region(x, y, 4);
         this.dir = [dx, dy];
     };
@@ -876,7 +881,6 @@ Player = {
     FillScore: [0, 5, 10],
     add_score: function (n) {
         this.score += n;
-        Debug.log("Score: " + Player.score, 3);
     },
 
     // Inicializacion de variables
@@ -964,8 +968,10 @@ Player = {
                         Player.add_score(n * Player.FillScore[1]);
                         if (Grid.percent > 75) {
                             Player.add_score(Math.round(Grid.percent - 75) * Player.FillScore[2]);
+                            game.won = true;
                             game.ended = true;
                         } else if (Grid.percent === 75) {
+                            game.won = true;
                             game.ended = true;
                         }
 
@@ -983,8 +989,10 @@ Player = {
                         Player.add_score(n * Player.FillScore[1]);
                         if (Grid.percent > 75) {
                             Player.add_score(Math.round(Grid.percent - 75) * Player.FillScore[2]);
+                            game.won = true;
                             game.ended = true;
                         } else if (Grid.percent === 75) {
+                            game.won = true;
                             game.ended = true;
                         }
 
@@ -1009,7 +1017,6 @@ Player = {
         }
 
         this.position = [x, y];
-        Debug.log("Player: " + x + ", " + y, 2);
         Grid.dirty_region(x, y, 3);
     },
 
@@ -1057,7 +1064,6 @@ Grid.init();
 Grid.reset();
 Qix._construct_();
 Qix._init_();
-Debug.init('debug');
 Player.init([96, 118]);
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [1, 0]));
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));

@@ -1,16 +1,18 @@
 .container {
-    width: 640px;
+    width: 680px;
     height: 480px;
     display: flex;
     background-color: #4A365E;
+    position: relative;
 }
 
-#canvas, #grid {
-    border: 1px solid #000000;
-}
-
-#debug {
-    width: 640px;
-    height: 480px;
-    border: 1px solid #ff0000;
+.btn {
+    background-color: #ff9a09; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 32px;
+    width: 680px;
 }
