@@ -24,17 +24,13 @@ function restart() {
     location.reload();
 }
 
-function setVolume(vol) {
-    game.bga.volume = vol / 100;
-}
-
 function pause() {
-     if (game.paused) {
-         game.paused = false;
-         game.mainLoop();
-     } else {
-         game.paused = true;
-     }
+    if (game.paused) {
+        game.paused = false;
+        game.mainLoop();
+    } else {
+        game.paused = true;
+    }
 }
 
 /* inputStates llevará el estado de las teclas left, right, down, up y space */
@@ -68,6 +64,12 @@ Key = {
             case 40:
                 inputStates.down = true;
                 break;
+            case 112:
+                pause();
+                break;
+            case 80:
+                pause();
+                break;
             default:
         }
     },
@@ -96,30 +98,50 @@ game = {
     ended: false,
     won: false,
     paused: false,
-    // then: Date.now(),
-    //
-    // // Medir los FPS
-    // measureFPS: function () {
-    //     let now = Date.now();
-    //     this.frameCount++;
-    //     this.delta = (now - this.then);
-    //     if (this.delta > 1000) {
-    //         this.fps = this.frameCount;
-    //         this.frameCount = 0;
-    //         this.then = now;
-    //     }
-    // },
+    then: Date.now(),
+    soundtrack: null,
+    gameWon: null,
+    gameLost: null,
 
-    // Gestion de eventos para las teclas pulsadas
+    // Medir los FPS
+    measureFPS: function () {
+        let now = Date.now();
+        this.frameCount++;
+        this.delta = (now - this.then);
+        if (this.delta > 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.then = now;
+        }
+    },
+
+    loadAssets: function () {
+        game.soundtrack = new Howl({
+            src: ['res/sounds/soundtrack.m4a'],
+            volume: 0.25,
+            onload: () => {
+                this.soundtrack.play();
+            }
+        });
+
+        game.gameWon = new Howl({
+            src: ['res/sounds/victory.mp3'],
+            volume: 0.25,
+        });
+
+        game.gameLost = new Howl({
+            src: ['res/sounds/fail.mp3'],
+            volume: 0.25,
+        });
+    },
+
     start: function () {
+        // Gestion de eventos para las teclas pulsadas
         document.addEventListener("keydown", Key.onKeydown);
         document.addEventListener("keyup", Key.onKeyup);
-        game.bga = new Audio("sounds/tetris_theme.ogg");
-        game.bga.loop = true;
-        game.bga.volume = .05;
-        game.bga.load();
-        game.bga.play();
-        this.mainLoop();
+
+        // Mientras carga los assets
+        setTimeout(this.mainLoop, 1000);
     },
 
     // Bucle principal del juego
@@ -136,32 +158,26 @@ game = {
                 });
                 Qix.update();
                 Qix.draw();
-                // game.measureFPS();
+                game.measureFPS();
                 Grid.displayScore();
                 requestAnimationFrame(game.mainLoop);
             }
 
         } else {
-
-            game.bga.pause();
+            game.soundtrack.pause();
 
             if (game.won) {
-                let gameWonAudio = new Audio("sounds/ffvii_victory.ogg");
-                gameWonAudio.volume = .20;
-                gameWonAudio.play();
+                game.gameWon.play();
 
                 Grid.ctx.font = "150px Georgia";
                 Grid.ctx.strokeStyle = 'white';
                 Grid.ctx.lineWidth = 8;
-                Grid.ctx.strokeText("Victory!", 100, 280);
+                Grid.ctx.strokeText("Victory!", 80, 280);
                 Grid.ctx.fillStyle = 'green';
-                Grid.ctx.fillText("Victory!", 100, 280);
+                Grid.ctx.fillText("Victory!", 80, 280);
 
             } else {
-
-                let gameOverAudio = new Audio("sounds/mario_dead.wav");
-                gameOverAudio.volume = .20;
-                gameOverAudio.play();
+                game.gameLost.play();
 
                 Grid.ctx.font = "150px Georgia";
                 Grid.ctx.strokeStyle = 'white';
@@ -829,13 +845,16 @@ class Sparx {
                 let valid = false;
                 let dxtmp = dx;
                 let dytmp = dy;
-                while (!valid) {
+                let vueltas = 0;
+                while (!valid || vueltas > 4) {
                     [dxtmp, dytmp] = [this.turn[1]["[" + dxtmp + "," + dytmp + "]"][0],
                         this.turn[1]["[" + dxtmp + "," + dytmp + "]"][1]];
-                    if (g.get(x + dxtmp, y + dytmp) === Player.WALL) {
+                    if (g.get(x + dxtmp, y + dytmp) === Player.WALL && (x + dxtmp !== x - dx && y + dytmp !== y - dy)) {
                         dx = dxtmp;
                         dy = dytmp;
                         valid = true;
+                    } else {
+                        vueltas++;
                     }
                 }
             }
@@ -1083,4 +1102,5 @@ Qix._init_();
 Player.init([96, 118]);
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [1, 0]));
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));
+game.loadAssets();
 game.start();
