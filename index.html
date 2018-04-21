@@ -1,13 +1,15 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/index.css">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
 </head>
 <body>
     <div class="container">
         <canvas id="grid" width="640" height="480" ></canvas>
+        <canvas id="info" width="640" height="480"></canvas>
     </div>
 
-    <button type="button" class="btn" onclick="restart();">Restart Game</button>
+    <button type="button" class="btn" id="start" onclick="start();" style="display: block;">Start Game</button>
 
     <script src="js/howler.js"></script>
     <script src="js/qix.js"></script>

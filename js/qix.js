@@ -20,8 +20,11 @@ function HashMap(hash) {
     return map;
 }
 
-function restart() {
-    location.reload();
+function start() {
+    let button = document.getElementById('start');
+    button.style.visibility = "hidden";
+    game.soundtrack.play();
+    game.start();
 }
 
 function pause() {
@@ -93,6 +96,38 @@ Key = {
     }
 };
 
+info = {
+
+    context: document.getElementById("info").getContext("2d"),
+
+    // Muestra la puntuacion
+    displayText: function () {
+        this.context.fillStyle = "black";
+        this.context.font = "bold 32px Georgia";
+        this.context.fillText("Objetivo del juego", 75, 35);
+        this.context.font = "15px Georgia";
+        this.context.fillText("Este juego consiste en rellenar el 75% de la pantalla formando polígonos.", 75, 70);
+        this.context.fillText("Un polígono es completado al conectar la línea con una pared ya existente.", 75, 90);
+        this.context.fillText("Si el enemigo principal, el Qix, choca contigo o cualquier punto de un polígono ", 75, 110);
+        this.context.fillText("sin completar, morirás. Lo mismo ocurrirá si un Sparx te toca.", 75, 130);
+
+        this.context.font = "bold 32px Georgia";
+        this.context.fillText("Controles", 75, 180);
+        this.context.font = "bold 15px Georgia";
+        this.context.fillText("Flechas direccionales:", 75, 215);
+        this.context.font = "15px Georgia";
+        this.context.fillText("Movimiento del jugador.", 250, 215);
+        this.context.font = "bold 15px Georgia";
+        this.context.fillText("Shift:", 75, 235);
+        this.context.font = "15px Georgia";
+        this.context.fillText("Permite comenzar a crear un polígono.", 122, 235);
+        this.context.font = "bold 15px Georgia";
+        this.context.fillText("'P' y 'p':", 75, 255);
+        this.context.font = "15px Georgia";
+        this.context.fillText("Pausar o reanudar el juego.", 138, 255);
+    },
+};
+
 game = {
 
     ended: false,
@@ -119,9 +154,6 @@ game = {
         game.soundtrack = new Howl({
             src: ['res/sounds/soundtrack.m4a'],
             volume: 0.25,
-            onload: () => {
-                this.soundtrack.play();
-            }
         });
 
         game.gameWon = new Howl({
@@ -140,8 +172,7 @@ game = {
         document.addEventListener("keydown", Key.onKeydown);
         document.addEventListener("keyup", Key.onKeyup);
 
-        // Mientras carga los assets
-        setTimeout(this.mainLoop, 1000);
+        this.mainLoop();
     },
 
     // Bucle principal del juego
@@ -535,6 +566,10 @@ Qix = {
         return [ux, uy];
     },
 
+    get_line: function (p0, p1) {
+        // en proceso
+    },
+
     left_turn: {
         "[0,1]": [1, 0],
         "[1,0]": [0, -1],
@@ -794,6 +829,11 @@ Qix = {
         for (let h = this.history, dh = this.dhistory, i = 0; i < h.length; i++) {
             Grid.drawLine(h[i][0], h[i][1]);
 
+            // Qix.get_line(dh[i][0], dh[i][1]).forEach(function (coord) {
+            //     Grid.dirty_region(coord[0], coord[1], 1);
+            // });
+        // }
+
             let tmp;
             // Menor coordenada x
             tmp = (dh[i][0][0] <= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
@@ -856,6 +896,10 @@ class Sparx {
                     } else {
                         vueltas++;
                     }
+                }
+                if (!valid && vueltas > 4) {
+                    dx = dx * -1;
+                    dy = dy * -1;
                 }
             }
             x += dx;
@@ -1102,5 +1146,5 @@ Qix._init_();
 Player.init([96, 118]);
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [1, 0]));
 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));
+info.displayText();
 game.loadAssets();
-game.start();
