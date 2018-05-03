@@ -100,7 +100,6 @@ info = {
 
     context: document.getElementById("info").getContext("2d"),
 
-    // Muestra la puntuacion
     displayText: function () {
         this.context.fillStyle = "black";
         this.context.font = "bold 32px Georgia";
@@ -165,14 +164,22 @@ game = {
             src: ['res/sounds/fail.mp3'],
             volume: 0.25,
         });
+
+        resources.load([
+            'res/img/sprites.png',
+        ]);
+        resources.onReady(() => {
+                game.soundtrack.play();
+                this.keySetup();
+                this.mainLoop();
+            }
+        );
     },
 
-    start: function () {
+    keySetup: function () {
         // Gestion de eventos para las teclas pulsadas
         document.addEventListener("keydown", Key.onKeydown);
         document.addEventListener("keyup", Key.onKeyup);
-
-        this.mainLoop();
     },
 
     // Bucle principal del juego
@@ -193,7 +200,6 @@ game = {
                 Grid.displayScore();
                 requestAnimationFrame(game.mainLoop);
             }
-
         } else {
             game.soundtrack.pause();
 
@@ -832,7 +838,7 @@ Qix = {
             // Qix.get_line(dh[i][0], dh[i][1]).forEach(function (coord) {
             //     Grid.dirty_region(coord[0], coord[1], 1);
             // });
-        // }
+            // }
 
             let tmp;
             // Menor coordenada x
@@ -860,6 +866,7 @@ Qix = {
 class Sparx {
 
     constructor(position, dir) {
+        this.sprite = new Sprite('res/img/sprites.png', [0, 0], [16, 16], 1, [0, 1, 2, 3, 4, 5, 6, 7]);
         this.ctx = Grid.ctx;
         this.dir = dir;
         this.position = position;
@@ -938,11 +945,17 @@ class Sparx {
         this.position = [x, y];
         Grid.dirty_region(x, y, 4);
         this.dir = [dx, dy];
+        this.sprite.update(1);
     };
 
     paint() {
-        this.ctx.fillStyle = 'rgb(0,255,0)';
-        this.ctx.fillRect(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6, 16, 16);
+        //this.ctx.fillStyle = 'rgb(0,255,0)';
+        //this.ctx.fillRect(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6, 16, 16);
+
+        this.ctx.save();
+        this.ctx.translate(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6);
+        this.sprite.render(this.ctx);
+        this.ctx.restore();
     };
 }
 
