@@ -56,15 +56,19 @@ Key = {
         // Flechas de dirección
         switch (event.keyCode) {
             case 37:
+                event.preventDefault();
                 inputStates.left = true;
                 break;
             case 38:
+                event.preventDefault();
                 inputStates.up = true;
                 break;
             case 39:
+                event.preventDefault();
                 inputStates.right = true;
                 break;
             case 40:
+                event.preventDefault();
                 inputStates.down = true;
                 break;
             case 112:
@@ -80,15 +84,19 @@ Key = {
     onKeyup: function (event) {
         switch (event.keyCode) {
             case 37:
+                event.preventDefault();
                 inputStates.left = false;
                 break;
             case 38:
+                event.preventDefault();
                 inputStates.up = false;
                 break;
             case 39:
+                event.preventDefault();
                 inputStates.right = false;
                 break;
             case 40:
+                event.preventDefault();
                 inputStates.down = false;
                 break;
             default:
@@ -136,8 +144,9 @@ game = {
     soundtrack: null,
     gameWon: null,
     gameLost: null,
+    timer: 30,
 
-    // Medir los FPS
+    // Medir los FPS (y funciones agregadas)
     measureFPS: function () {
         let now = Date.now();
         this.frameCount++;
@@ -146,6 +155,12 @@ game = {
             this.fps = this.frameCount;
             this.frameCount = 0;
             this.then = now;
+            this.timer--;
+            if (this.timer <= 0) {
+                Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [1, 0]));
+                Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));
+                this.timer = 30;
+            }
         }
     },
 
@@ -543,6 +558,19 @@ Grid = {
         this.ctx.font = "32px Georgia";
         this.ctx.fillText("Score: " + Player.score, 80, 35);
         this.ctx.fillText("Area: " + Grid.percent.toFixed(2) + " / 75%", 350, 35);
+
+        // timer
+        this.ctx.fillStyle = 'rgb(255,0,0)';
+
+        let rad = game.timer / 30 * 360.0 * (Math.PI / 180);
+
+        this.ctx.beginPath();
+        this.ctx.arc(45, 25, 15, 0, rad, false);
+        this.ctx.stroke();
+        this.ctx.font = "15px Georgia";
+
+        let a = game.timer >= 10 ? "" : "0";
+        this.ctx.fillText(a + game.timer, 37, 28);
     },
 };
 
@@ -572,8 +600,18 @@ Qix = {
         return [ux, uy];
     },
 
-    get_line: function (p0, p1) {
-        // en proceso
+    clear_line: function (p0, p1) {
+        // slope = (y2 - y1) / (x2 - x1)
+        let m = (p1[1] - p0[1]) / (p1[0] - p0[0]);
+        // intercept = y - m * x
+        let b = p0[1] - m * p0[0];
+
+        for (let i = p0[0]; i <= p1[0]; i++) {
+            let y = m * i + b;
+            Grid.dirty_region(i, y, 1);
+            Grid.dirty_region(i, y + 1, 1);
+            Grid.dirty_region(i, y - 1, 1);
+        }
     },
 
     left_turn: {
@@ -829,37 +867,44 @@ Qix = {
 
     // Dibuja el Qix
     draw: function () {
-        let [xmin, ymin] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-        let [xmax, ymax] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+        // let [xmin, ymin] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+        // let [xmax, ymax] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
 
         for (let h = this.history, dh = this.dhistory, i = 0; i < h.length; i++) {
             Grid.drawLine(h[i][0], h[i][1]);
 
-            // Qix.get_line(dh[i][0], dh[i][1]).forEach(function (coord) {
-            //     Grid.dirty_region(coord[0], coord[1], 1);
-            // });
-            // }
-
-            let tmp;
-            // Menor coordenada x
-            tmp = (dh[i][0][0] <= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
-            xmin = (tmp <= xmin) ? tmp : xmin;
-            // Menor coordenada y
-            tmp = (dh[i][0][1] <= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
-            ymin = (tmp <= ymin) ? tmp : ymin;
-            // Mayor coordenada x
-            tmp = (dh[i][0][0] >= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
-            xmax = (tmp >= xmax) ? tmp : xmax;
-            // Mayor coordenada y
-            tmp = (dh[i][0][1] >= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
-            ymax = (tmp >= ymax) ? tmp : ymax;
-        }
-
-        for (let i = xmin - 1; i <= xmax + 1; i++) {
-            for (let j = ymin - 1; j <= ymax + 1; j++) {
-                Grid.dirty_region(i, j, 1);
+            let greater, lesser;
+            // Comparar x
+            if (dh[i][0][0] < dh[i][1][0]) {
+                lesser = dh[i][0];
+                greater = dh[i][1];
+            } else {
+                lesser = dh[i][1];
+                greater = dh[i][0];
             }
+
+            Qix.clear_line(lesser, greater);
+
+            // let tmp;
+            // // Menor coordenada x
+            // tmp = (dh[i][0][0] <= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
+            // xmin = (tmp <= xmin) ? tmp : xmin;
+            // // Menor coordenada y
+            // tmp = (dh[i][0][1] <= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
+            // ymin = (tmp <= ymin) ? tmp : ymin;
+            // // Mayor coordenada x
+            // tmp = (dh[i][0][0] >= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
+            // xmax = (tmp >= xmax) ? tmp : xmax;
+            // // Mayor coordenada y
+            // tmp = (dh[i][0][1] >= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
+            // ymax = (tmp >= ymax) ? tmp : ymax;
         }
+
+        // for (let i = xmin - 1; i <= xmax + 1; i++) {
+        //     for (let j = ymin - 1; j <= ymax + 1; j++) {
+        //         Grid.dirty_region(i, j, 1);
+        //     }
+        // }
     },
 };
 
