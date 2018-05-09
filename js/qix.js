@@ -145,6 +145,7 @@ game = {
     gameWon: null,
     gameLost: null,
     timer: 30,
+    frameCount: 0,
 
     // Medir los FPS (y funciones agregadas)
     measureFPS: function () {
@@ -161,6 +162,7 @@ game = {
                 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));
                 this.timer = 30;
             }
+            console.log("FPS: " + game.fps);
         }
     },
 
@@ -365,7 +367,6 @@ Grid = {
     },
 
     paint: function () {
-        // Pintar cada coordenada del grid segun su valor
         this.dirty.forEach((value, key, map) => {
             let dot = JSON.parse(key);
             let x = dot[0];
@@ -553,7 +554,7 @@ Grid = {
         this.ctx.fillStyle = 'rgb(0,255,0)';
         this.ctx.clearRect(0, 0, this.canvas.width - 3, Grid.offset[1] - 3);
         this.ctx.font = "32px Georgia";
-        this.ctx.fillText("Score: " + Player.score + " FPS: " + game.fps, 80, 35);
+        this.ctx.fillText("Score: " + Player.score, 80, 35);
         this.ctx.fillText("Area: " + Grid.percent.toFixed(2) + " / 75%", 350, 35);
 
         // timer
@@ -608,7 +609,19 @@ Qix = {
             let y = Math.round(m * i + b);
             Grid.dirty_region(i, y, 1);
             Grid.dirty_region(i, y + 1, 1);
+            Grid.dirty_region(i, y + 2, 1);
             Grid.dirty_region(i, y - 1, 1);
+            Grid.dirty_region(i, y - 2, 1);
+        }
+
+        let [y1, y2] = p0[1] < p1[1] ? [p0[1], p1[1]] : [p1[1], p0[1]];
+        for (let i = y1 - 1; i <= y2 + 1; i++) {
+            let x = Math.round((i - b) / m);
+            Grid.dirty_region(x, i, 1);
+            Grid.dirty_region(x + 1, i, 1);
+            Grid.dirty_region(x + 2, i, 1);
+            Grid.dirty_region(x - 1, i, 1);
+            Grid.dirty_region(x - 2, i, 1);
         }
     },
 
