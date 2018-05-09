@@ -603,20 +603,12 @@ Qix = {
         // intercept = y - m * x
         let b = p0[1] - m * p0[0];
 
-        let [x1, x2] = p0[0] < p1[0] ? [p0[0], p1[0]] : [p1[0], p0[0]]
-        for (let i = x1; i <= x2; i++) {
+        let [x1, x2] = p0[0] < p1[0] ? [p0[0], p1[0]] : [p1[0], p0[0]];
+        for (let i = x1 - 1; i <= x2 + 1; i++) {
             let y = Math.round(m * i + b);
             Grid.dirty_region(i, y, 1);
             Grid.dirty_region(i, y + 1, 1);
             Grid.dirty_region(i, y - 1, 1);
-        }
-
-        let [y1, y2] = p0[1] < p1[1] ? [p0[1], p1[1]] : [p1[1], p0[1]]
-        for (let i = y1; i <= y2; i++) {
-            let x = Math.round((i - b) + m);
-            Grid.dirty_region(x, i, 1);
-            Grid.dirty_region(x + 1, i, 1);
-            Grid.dirty_region(x - 1, i, 1);
         }
     },
 
@@ -878,20 +870,6 @@ Qix = {
 
         for (let h = this.history, dh = this.dhistory, i = 0; i < h.length; i++) {
             Grid.drawLine(h[i][0], h[i][1]);
-
-            /*
-            let greater, lesser;
-            // Comparar x
-            if (dh[i][0][0] < dh[i][1][0]) {
-                lesser = dh[i][0];
-                greater = dh[i][1];
-            } else {
-                lesser = dh[i][1];
-                greater = dh[i][0];
-            }
-
-            Qix.clear_line(lesser, greater);
-            */
             Qix.clear_line(dh[i][0], dh[i][1]);
 
             // let tmp;
