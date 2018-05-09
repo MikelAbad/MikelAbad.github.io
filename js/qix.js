@@ -21,10 +21,10 @@ function HashMap(hash) {
 }
 
 function start() {
-    let button = document.getElementById('start');
-    button.style.visibility = "hidden";
     game.soundtrack.play();
-    game.start();
+    document.addEventListener("keydown", Key.onKeydown);
+    document.addEventListener("keyup", Key.onKeyup);
+    game.mainLoop();
 }
 
 function pause() {
@@ -132,7 +132,13 @@ info = {
         this.context.fillText("'P' y 'p':", 75, 255);
         this.context.font = "15px Georgia";
         this.context.fillText("Pausar o reanudar el juego.", 138, 255);
+        this.context.font = "bold 12px Georgia";
     },
+
+    displayFPS: function () {
+        this.context.clearRect(70, 450, 70, 20);
+        this.context.fillText("FPS: " + game.fps, 75, 460);
+    }
 };
 
 game = {
@@ -154,6 +160,7 @@ game = {
         this.delta = (now - this.then);
         if (this.delta > 1000) {
             this.fps = this.frameCount;
+            info.displayFPS();
             this.frameCount = 0;
             this.then = now;
             this.timer--;
@@ -162,7 +169,6 @@ game = {
                 Grid.sparx.push(new Sparx([Math.round(Grid.w / 2), 2], [-1, 0]));
                 this.timer = 30;
             }
-            console.log("FPS: " + game.fps);
         }
     },
 
@@ -186,17 +192,9 @@ game = {
             'res/img/sprites.png',
         ]);
         resources.onReady(() => {
-                game.soundtrack.play();
-                this.keySetup();
-                this.mainLoop();
+                start();
             }
         );
-    },
-
-    keySetup: function () {
-        // Gestion de eventos para las teclas pulsadas
-        document.addEventListener("keydown", Key.onKeydown);
-        document.addEventListener("keyup", Key.onKeyup);
     },
 
     // Bucle principal del juego
@@ -215,6 +213,7 @@ game = {
                 Qix.draw();
                 game.measureFPS();
                 Grid.displayScore();
+                Grid.displayTimer();
                 requestAnimationFrame(game.mainLoop);
             }
         } else {
@@ -238,9 +237,7 @@ game = {
                 Grid.ctx.lineWidth = 8;
                 Grid.ctx.strokeText("Game", 140, 200);
                 Grid.ctx.strokeText("Over", 175, 350);
-
                 Grid.ctx.fillStyle = 'red';
-
                 Grid.ctx.fillText("Game", 140, 200);
                 Grid.ctx.fillText("Over", 175, 350);
             }
@@ -430,7 +427,7 @@ Grid = {
             y_filling = !y_filling;
         }
         let area = 0;
-
+        let filling;
         for (let y = 3; y < this.h - 3; y = y + 2) {
             filling = y_filling;
             for (let x = 3; x < this.w - 3; x++) {
@@ -458,7 +455,7 @@ Grid = {
 
     // Devuelve una funcion que dice si una coordenada contiene alguno de los valores de vset en el grid
     vmap: function (vset) {
-        a = [];
+        let a = [];
         for (let i = 0; i < 16; i++) {
             a.push(vset.includes(i));
         }
@@ -559,20 +556,15 @@ Grid = {
         this.ctx.font = "32px Georgia";
         this.ctx.fillText("Score: " + Player.score, 80, 35);
         this.ctx.fillText("Area: " + Grid.percent.toFixed(2) + " / 75%", 350, 35);
-
-        // timer
-        this.ctx.fillStyle = 'rgb(255,0,0)';
-
-        let rad = game.timer / 30 * 360.0 * (Math.PI / 180);
-
-        this.ctx.beginPath();
-        this.ctx.arc(45, 25, 15, 0, rad, false);
-        this.ctx.stroke();
-        this.ctx.font = "15px Georgia";
-
-        let a = game.timer >= 10 ? "" : "0";
-        this.ctx.fillText(a + game.timer, 37, 28);
     },
+
+    displayTimer: function () {
+        this.ctx.clearRect(Grid.offset[0] - 5, Grid.offset[1] + Grid.height * 3 + 10, Grid.width * 3 + 10, 40);
+        this.ctx.fillStyle = "orange";
+        this.ctx.fillRect(Grid.offset[0], Grid.offset[1] + Grid.height * 3 + 15, (game.timer / 30) * (Grid.width * 3), 5);
+        this.ctx.font = "20px Georgia";
+        this.ctx.fillText("New enemies in " + game.timer + "s", Grid.offset[0] + Grid.width + 10, Grid.offset[1] + Grid.height * 3 + 45);
+    }
 };
 
 Qix = {
@@ -607,24 +599,28 @@ Qix = {
         // intercept = y - m * x
         let b = p0[1] - m * p0[0];
 
-        let [x1, x2] = p0[0] < p1[0] ? [p0[0], p1[0]] : [p1[0], p0[0]];
-        for (let i = x1 - 1; i <= x2 + 1; i++) {
-            let y = Math.round(m * i + b);
-            Grid.dirty_region(i, y, 1);
-            Grid.dirty_region(i, y + 1, 1);
-            Grid.dirty_region(i, y + 2, 1);
-            Grid.dirty_region(i, y - 1, 1);
-            Grid.dirty_region(i, y - 2, 1);
-        }
+        if (p0[0] === p1[0]) {
+            let [y1, y2] = p0[1] < p1[1] ? [p0[1], p1[1]] : [p1[1], p0[1]];
+            for (let y = y1; y <= y2; y++) {
+                Grid.dirty_region(p0[0] - 1, y, 1);
+                Grid.dirty_region(p0[0] + 1, y, 1);
+            }
+        } else {
+            let [x1, x2] = p0[0] < p1[0] ? [p0[0], p1[0]] : [p1[0], p0[0]];
+            for (let i = x1 - 1; i <= x2 + 1; i++) {
+                let y = Math.round(m * i + b);
+                Grid.dirty_region(i, y, 1);
+                Grid.dirty_region(i, y + 2, 1);
+                Grid.dirty_region(i, y - 2, 1);
+            }
 
-        let [y1, y2] = p0[1] < p1[1] ? [p0[1], p1[1]] : [p1[1], p0[1]];
-        for (let i = y1 - 1; i <= y2 + 1; i++) {
-            let x = Math.round((i - b) / m);
-            Grid.dirty_region(x, i, 1);
-            Grid.dirty_region(x + 1, i, 1);
-            Grid.dirty_region(x + 2, i, 1);
-            Grid.dirty_region(x - 1, i, 1);
-            Grid.dirty_region(x - 2, i, 1);
+            let [y1, y2] = p0[1] < p1[1] ? [p0[1], p1[1]] : [p1[1], p0[1]];
+            for (let i = y1 - 1; i <= y2 + 1; i++) {
+                let x = Math.round((i - b) / m);
+                Grid.dirty_region(x, i, 1);
+                Grid.dirty_region(x + 2, i, 1);
+                Grid.dirty_region(x - 2, i, 1);
+            }
         }
     },
 
@@ -881,33 +877,11 @@ Qix = {
 
     // Dibuja el Qix
     draw: function () {
-        // let [xmin, ymin] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-        // let [xmax, ymax] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
 
         for (let h = this.history, dh = this.dhistory, i = 0; i < h.length; i++) {
             Grid.drawLine(h[i][0], h[i][1]);
             Qix.clear_line(dh[i][0], dh[i][1]);
-
-            // let tmp;
-            // // Menor coordenada x
-            // tmp = (dh[i][0][0] <= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
-            // xmin = (tmp <= xmin) ? tmp : xmin;
-            // // Menor coordenada y
-            // tmp = (dh[i][0][1] <= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
-            // ymin = (tmp <= ymin) ? tmp : ymin;
-            // // Mayor coordenada x
-            // tmp = (dh[i][0][0] >= dh[i][1][0]) ? dh[i][0][0] : dh[i][1][0];
-            // xmax = (tmp >= xmax) ? tmp : xmax;
-            // // Mayor coordenada y
-            // tmp = (dh[i][0][1] >= dh[i][1][1]) ? dh[i][0][1] : dh[i][1][1];
-            // ymax = (tmp >= ymax) ? tmp : ymax;
         }
-
-        // for (let i = xmin - 1; i <= xmax + 1; i++) {
-        //     for (let j = ymin - 1; j <= ymax + 1; j++) {
-        //         Grid.dirty_region(i, j, 1);
-        //     }
-        // }
     },
 };
 
@@ -997,9 +971,6 @@ class Sparx {
     };
 
     paint() {
-        //this.ctx.fillStyle = 'rgb(0,255,0)';
-        //this.ctx.fillRect(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6, 16, 16);
-
         this.ctx.save();
         this.ctx.translate(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6);
         this.sprite.render(this.ctx);

@@ -13,36 +13,18 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.48183253">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="qix.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/js/qix.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="638">
-                  <caret line="376" column="48" lean-forward="true" selection-start-line="376" selection-start-column="48" selection-end-line="376" selection-end-column="48" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="qix.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/js/qix.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="407">
-                  <caret line="616" column="28" lean-forward="false" selection-start-line="616" selection-start-column="28" selection-end-line="616" selection-end-column="28" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="qix.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/qix.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="764">
+              <caret line="1182" column="0" lean-forward="true" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -54,13 +36,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>resume</find>
-      <find>game</find>
-      <find>Player</find>
-      <find>game.paused</find>
-      <find>display</find>
-      <find>displat</find>
-      <find>restart</find>
       <find>resour</find>
       <find>sparx.upd</find>
       <find>draw()</find>
@@ -76,14 +51,21 @@
       <find>qix.dra</find>
       <find>11</find>
       <find>drawline</find>
-      <find>dirty</find>
-      <find>displaySco</find>
       <find>clear_l</find>
       <find>clear_line</find>
       <find>math.round</find>
       <find>clear_</find>
       <find>dirty_re</find>
       <find>paint</find>
+      <find>init</find>
+      <find>start</find>
+      <find>dirty</find>
+      <find>if (p0[0] ==</find>
+      <find>clear</find>
+      <find>score</find>
+      <find>displaySco</find>
+      <find>Grid.color</find>
+      <find>color</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -164,14 +146,19 @@
             <path>
               <item name="gitpage" type="b2602c69:ProjectViewProjectNode" />
               <item name="gitpage" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gitpage" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gitpage" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -231,18 +218,20 @@
       <workItem from="1525700003413" duration="1276000" />
       <workItem from="1525778404438" duration="2201000" />
       <workItem from="1525872969147" duration="1044000" />
-      <workItem from="1525874661439" duration="4333000" />
+      <workItem from="1525874661439" duration="4561000" />
+      <workItem from="1525890891614" duration="448000" />
+      <workItem from="1525903014328" duration="5547000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66481000" />
+    <option name="totallyTimeSpent" value="72704000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.080729164" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15052083" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -271,6 +260,22 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/js/qix.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/qix.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/qix.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -431,18 +436,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.html">
+    <entry file="file://$PROJECT_DIR$/test.html" />
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="7" />
+        <state relative-caret-position="306">
+          <caret line="2734" column="0" lean-forward="false" selection-start-line="2734" selection-start-column="0" selection-end-line="2734" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/HTML5.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="449" column="0" lean-forward="false" selection-start-line="449" selection-start-column="0" selection-end-line="449" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/qix.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="616" column="28" lean-forward="false" selection-start-line="616" selection-start-column="28" selection-end-line="616" selection-end-column="28" />
+        <state relative-caret-position="764">
+          <caret line="1182" column="0" lean-forward="true" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
           <folding />
         </state>
       </provider>
