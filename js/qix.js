@@ -374,7 +374,10 @@ Grid = {
             let v = Grid.get(x, y);
 
             this.ctx.fillStyle = 'rgb(' + this.colors[v].join(',') + ')';
-            this.ctx.fillRect(Grid.offset[0] + x * 3, Grid.offset[1] + y * 3, 3, 3);
+            if ((Grid.offset[1] + y * 3) + 3 <= Grid.offset[1] + Grid.h * 3) {
+                this.ctx.fillRect(Grid.offset[0] + x * 3, Grid.offset[1] + y * 3, 3, 3);
+            }
+
         });
 
         Grid.dirty = new HashMap(JSON.stringify);
