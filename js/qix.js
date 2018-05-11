@@ -20,10 +20,26 @@ function HashMap(hash) {
     return map;
 }
 
-function start() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function start() {
     game.soundtrack.play();
     document.addEventListener("keydown", Key.onKeydown);
     document.addEventListener("keyup", Key.onKeyup);
+
+    Grid.ctx.font = "30px Arial";
+    Grid.ctx.clearRect(Grid.offset[0] + Grid.width * 1.4, Grid.offset[1] + Grid.height * 1.3, Grid.width / 5, Grid.height / 3);
+    Grid.ctx.fillText("3", Grid.offset[0] + Grid.width * 1.5, Grid.offset[1] + Grid.height * 1.5);
+    await sleep(1000);
+    Grid.ctx.clearRect(Grid.offset[0] + Grid.width * 1.4, Grid.offset[1] + Grid.height * 1.3, Grid.width / 5, Grid.height / 3);
+    Grid.ctx.fillText("2", Grid.offset[0] + Grid.width * 1.5, Grid.offset[1] + Grid.height * 1.5);
+    await sleep(1000);
+    Grid.ctx.clearRect(Grid.offset[0] + Grid.width * 1.4, Grid.offset[1] + Grid.height * 1.3, Grid.width / 5, Grid.height / 3);
+    Grid.ctx.fillText("1", Grid.offset[0] + Grid.width * 1.5, Grid.offset[1] + Grid.height * 1.5);
+    await sleep(1000);
+
     game.mainLoop();
 }
 
