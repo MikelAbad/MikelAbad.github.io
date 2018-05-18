@@ -1,6 +1,6 @@
 // Clase HashMap auxiliar
 function HashMap(hash) {
-    let map = new Map;
+    let map = new Map();
     let _set = map.set;
     let _get = map.get;
     let _has = map.has;
@@ -915,7 +915,7 @@ class Sparx {
         }
         let [x0, y0] = [0, 0];
         let [x, y] = position;
-    };
+    }
 
     // Movimiento del sparx
     update() {
@@ -984,14 +984,14 @@ class Sparx {
         Grid.dirty_region(x, y, 4);
         this.dir = [dx, dy];
         this.sprite.update(1);
-    };
+    }
 
     paint() {
         this.ctx.save();
         this.ctx.translate(Grid.offset[0] + this.position[0] * 3 - 6, Grid.offset[1] + this.position[1] * 3 - 6);
         this.sprite.render(this.ctx);
         this.ctx.restore();
-    };
+    }
 }
 
 Player = {
