@@ -17,8 +17,8 @@
       <file leaf-file-name="qix.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/qix.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="764">
-              <caret line="1182" column="0" lean-forward="true" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
+            <state relative-caret-position="793">
+              <caret line="1182" column="0" lean-forward="false" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -163,7 +163,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../dawe" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="JavaScriptPreferStrict" value="false" />
@@ -220,12 +220,13 @@
       <workItem from="1525872969147" duration="1044000" />
       <workItem from="1525874661439" duration="4561000" />
       <workItem from="1525890891614" duration="448000" />
-      <workItem from="1525903014328" duration="5547000" />
+      <workItem from="1525903014328" duration="6146000" />
+      <workItem from="1526213391557" duration="34000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72704000" />
+    <option name="totallyTimeSpent" value="73337000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -260,6 +261,14 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/js/qix.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/qix.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -448,14 +457,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="449" column="0" lean-forward="false" selection-start-line="449" selection-start-column="0" selection-end-line="449" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/qix.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="764">
-          <caret line="1182" column="0" lean-forward="true" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
+        <state relative-caret-position="793">
+          <caret line="1182" column="0" lean-forward="false" selection-start-line="1182" selection-start-column="0" selection-end-line="1182" selection-end-column="0" />
           <folding />
         </state>
       </provider>
