@@ -208,9 +208,8 @@ game = {
             'res/img/sprites.png',
         ]);
         resources.onReady(() => {
-                start();
-            }
-        );
+            start();
+        });
     },
 
     // Bucle principal del juego
@@ -275,7 +274,8 @@ Grid = {
 
     offset: [50, 50],
 
-    colors: [[0, 0, 0], // 0 empty
+    colors: [
+        [0, 0, 0], // 0 empty
         [0, 0, 180], // 1 fill
         [160, 0, 0], // 2 fill
         [74, 54, 94], // 3 OUT
@@ -286,7 +286,8 @@ Grid = {
         [255, 0, 0], // 8 red
         [255, 0, 0], // 9 red
         [255, 0, 0], // 10 TRAILTRACE
-        [255, 0, 255]], // 11 WALLTRACE
+        [255, 0, 255]
+    ], // 11 WALLTRACE
 
     sparx: [],
 
@@ -376,8 +377,7 @@ Grid = {
         }
     },
 
-    blit: function (x, y, v) {
-    },
+    blit: function (x, y, v) {},
 
     paint: function () {
         this.dirty.forEach((value, key, map) => {
@@ -655,12 +655,30 @@ Qix = {
     },
 
     _construct_: function () {
-        this.unit_vectors = [[1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1]];  // # king moves
+        this.unit_vectors = [
+            [1, -1],
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [-1, 1],
+            [-1, 0],
+            [-1, -1],
+            [0, -1]
+        ]; // # king moves
         this.uvec_index = new HashMap(JSON.stringify);
         for (let i = 0; i < 8; i++)
             this.uvec_index.set(this.unit_vectors[i], i);
 
-        this.directions = [[1, -2], [2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2]]; // # knight moves
+        this.directions = [
+            [1, -2],
+            [2, -1],
+            [2, 1],
+            [1, 2],
+            [-1, 2],
+            [-2, 1],
+            [-2, -1],
+            [-1, -2]
+        ]; // # knight moves
         this.dir_index = new HashMap(JSON.stringify);
         for (let i = 0; i < 8; i++)
             this.dir_index.set(this.directions[i], i);
@@ -695,16 +713,30 @@ Qix = {
             ux = this._cmp(dx, 0);
             uy = this._cmp(dy, 0);
             if (Math.abs(dx) > Math.abs(dy)) {
-                this.dir_steps.set([dx, dy], [[ux, 0], [0, uy], [ux, 0]]);
+                this.dir_steps.set([dx, dy], [
+                    [ux, 0],
+                    [0, uy],
+                    [ux, 0]
+                ]);
             } else {
-                this.dir_steps.set([dx, dy], [[0, uy], [ux, 0], [0, uy]]);
+                this.dir_steps.set([dx, dy], [
+                    [0, uy],
+                    [ux, 0],
+                    [0, uy]
+                ]);
             }
         }
     }, // end construct
 
     _init_: function () {
-        this.p = [[55, 55], [57, 59]]; //  #position
-        this.d = [[1, 2], [2, 1]]; // #direction (always knights move)
+        this.p = [
+            [55, 55],
+            [57, 59]
+        ]; //  #position
+        this.d = [
+            [1, 2],
+            [2, 1]
+        ]; // #direction (always knights move)
         this.history = [];
         this.dhistory = [];
         this.phase = 0; // # half of knights move (choices made in phase 0, minor axis offset in phase 1)
@@ -724,13 +756,19 @@ Qix = {
         while (x !== x1 || y !== y1) {
             if (Math.abs((x1 - x) * ady) > Math.abs((y1 - y) * adx)) {
                 if (!g.cell_empty((x + ux), y)) {
-                    return [[x + ux, y], [ux, 0]];
+                    return [
+                        [x + ux, y],
+                        [ux, 0]
+                    ];
                 } else {
                     x += 2 * ux;
                 }
             } else {
                 if (!g.cell_empty(x, (y + uy))) {
-                    return [[x, y + uy], [0, uy]];
+                    return [
+                        [x, y + uy],
+                        [0, uy]
+                    ];
                 } else {
                     y += 2 * uy;
                 }
@@ -774,7 +812,9 @@ Qix = {
             x1 += dx1;
             y1 += dy1;
             if (x1 === p0[0] && y1 === p0[1]) {
-                return [[-d0[0], -d0[1]], d1];
+                return [
+                    [-d0[0], -d0[1]], d1
+                ];
             }
         }
     },
@@ -797,7 +837,8 @@ Qix = {
         let pg = [];
         let dg = [];
 
-        let xoff = Grid.offset[0], yoff = Grid.offset[1]; // g.offset;
+        let xoff = Grid.offset[0],
+            yoff = Grid.offset[1]; // g.offset;
         let x, y, steps, dx, dy, px, py;
 
         for (let i = 0; i < 2; i++) {
@@ -908,9 +949,9 @@ class Sparx {
         this.ctx = Grid.ctx;
         this.dir = dir;
         this.position = position;
-        if (dir[0] === 1) {// clockwise
+        if (dir[0] === 1) { // clockwise
             this.turn = [Qix.left_turn, Qix.right_turn];
-        } else {// # counter-clockwise;
+        } else { // # counter-clockwise;
             this.turn = [Qix.right_turn, Qix.left_turn];
         }
         let [x0, y0] = [0, 0];
@@ -933,7 +974,8 @@ class Sparx {
                 let vueltas = 0;
                 while (!valid || vueltas > 4) {
                     [dxtmp, dytmp] = [this.turn[1]["[" + dxtmp + "," + dytmp + "]"][0],
-                        this.turn[1]["[" + dxtmp + "," + dytmp + "]"][1]];
+                        this.turn[1]["[" + dxtmp + "," + dytmp + "]"][1]
+                    ];
                     if (g.get(x + dxtmp, y + dytmp) === Player.WALL && (x + dxtmp !== x - dx && y + dytmp !== y - dy)) {
                         dx = dxtmp;
                         dy = dytmp;
@@ -1032,7 +1074,7 @@ Player = {
 
             if (this.drawing) {
                 if (Grid.cell_empty(x + dx * 2, y + dy * 2) || Grid.cell_wall(x + dx * 2, y + dy * 2) &&
-                    ( (x + dx * 2) !== this.launch_point[0] || (y + dy * 2) !== this.launch_point[1] )) {
+                    ((x + dx * 2) !== this.launch_point[0] || (y + dy * 2) !== this.launch_point[1])) {
                     this.dir = [dx, dy];
                     x += dx;
                     y += dy;
@@ -1159,7 +1201,9 @@ Player = {
 
     // Calcular la direccion que debe seguir segun los input
     calc_dir: function () {
-        let dx = 0, dy = 0, draw = 0;
+        let dx = 0,
+            dy = 0,
+            draw = 0;
 
         if (inputStates.shift) {
             draw = 1;
